@@ -128,37 +128,6 @@ void Board::addFood() {
 void Board::addTraps() {
 /* (5 pts) code for the addTraps method goes here
 */
-	level = tolower(level);
-
-	int x, y, count = 0;
-	if(level == 'e'){
-		do{
-			y = rand() % size;
-			y = rand() % size;
-			if(board[x][y] == '+'){
-				board[x][y] = 'T';
-			}
-			count++;
-		}while(count <= size - 6);
-	}else if(level == 'm'){
-			do{
-				x = rand() % size;
-				y = rand() % size;
-				if(board[x][y] == '+'){
-					board[x][y] = 'T';
-				}
-				count++;
-			}while(count <= size - 8);
-	}else if(level == 'h'){
-		do{
-			x = rand() % size;
-			y = rand() % size;
-			if(board[x][y] == '+'){
-				board[x][y] = 'T';
-			}
-			count++;
-		}while(count <= size - 10);
-	}
 
 }
 void Board::boardConfig() {
