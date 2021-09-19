@@ -2,7 +2,8 @@
  * Board.cpp
  *
  *  Created on: Sep 14, 2021
- *      Author: pinkhathacker
+ *      Author: pinkhathacker/Zoe Valladares
+ *      & Emma S.
  */
 
 #include "Board.hpp"
