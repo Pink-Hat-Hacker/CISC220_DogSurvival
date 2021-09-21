@@ -49,20 +49,30 @@
 /////* this method just resets the strength (for me it was 50) and the x and y to 0 and 0.*/
 //
 //
+
+#include "Dog.hpp"
+#include <iostream>
+using namespace std;
 ////constructors
 ///*
 // * TODO: Dog(string n)
 // */
-//Dog::Dog(string nName){
-//	//pass
-//}
+Dog::Dog(string nName){
+	name = nName;
+	strength=50;
+	x=0;
+	y=0;
+}
 //
 ///*
 // * TODO: Dog()
 // */
-//Dog::Dog(){
-//	//pass
-//}
+Dog::Dog(){
+	name = "Spot";
+	strength=50;
+	x=0;
+	y=0;
+}
 //
 //
 ////methods
@@ -70,36 +80,48 @@
 ///*
 // * TODO: bool changeStrength(int amt)
 // */
-//bool Dog::changeStrength(int amt){
-//	//pass
-//}
+bool Dog::changeStrength(int amt){
+	bool alive=1;
+	strength=strength+amt;
+	printDog();
+	if(strength<0){
+		alive=0;
+		die();
+	}
+	return alive;
+}
 //
 ///*
 // * TODO:void die();
 // */
 //
-//void Dog::die(){
-//	//pass
-//}
+void Dog::die(){
+	cout << "Oh no! "<< name << " died in the evil forest!"<< endl;
+}
 //
 ///*
 // * TODO: void printDog()
 // */
-//void Dog::printDog(){
-//	//pass
-//}
+void Dog::printDog(){
+	//cout << "Your dog's name is " << name << "." << endl;
+	cout << name << " has " << strength << " strength left." << endl;
+	//testing
+	cout << "x: " << x << "  y: " << y << "\n" << endl;
+}
 //
 ///*
 // * TODO: void won();
 // */
 //
-//void Dog::won(){
-//	//pass
-//}
+void Dog::won(){
+	cout << "Congratulations!!! You survived the evil Forest!" << endl;
+}
 //
 ///*
 // * TODO: Void reset();
 // */
-//void Dog::reset(){
-//
-//}
+void Dog::reset(){
+	strength=50;
+	x=0;
+	y=0;
+}

@@ -21,7 +21,7 @@ int starty; //again, the dog's y entrance to the board (0)
 int endx; // THe goal location on the right side (random x value)
 int endy; // will be size -1
 char level; //'e' for easy, 'm' for medium, 'h' for hard (user can input in the initAll() method)
-//Dog mydog; //the dog object that's moving through
+Dog mydog; //the dog object that's moving through
 bool debug;
 //this is a boolean value that I used for debugging - so if it was true, and
 //I was in debug mode, I'd include a lot more print statements in each method

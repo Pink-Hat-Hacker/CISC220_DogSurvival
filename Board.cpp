@@ -7,6 +7,8 @@
  */
 
 #include "Board.hpp"
+//trying out
+#include "Dog.hpp"
 #include <iostream>
 using namespace std;
 
@@ -28,7 +30,7 @@ Board::Board(bool d){
 Board::Board(char diff, string name, bool d) {
 	level = diff;
 	debug = d;
-	//mydog.name = name;
+	mydog.name = name;
 	wallStrength = 6;
 	InitAll();
 }
@@ -45,8 +47,8 @@ void Board::InitAll() {
 		starty = 0;
 		endx = rand() % size;
 		endy = size-1;
-		//mydog.x = startx;
-		//mydog.y = starty;
+		mydog.x = startx;
+		mydog.y = starty;
 		boardConfig();
 		addFood();
 		addTraps();
@@ -129,7 +131,26 @@ void Board::addFood() {
 void Board::addTraps() {
 /* (5 pts) code for the addTraps method goes here
 */
+	level = tolower(level);
 
+	int count = 0;
+	int traps = level == 'e'? (size-6): level == 'm'? (size-8) : (size-10);
+	while(count <= traps){
+		int i = rand()%size;
+		int j = rand()%size;
+		if(board[i][j] == '+'){
+			if(level == 'e' && count <= (size-6)){
+				board[i][j] = 'T';
+				count++;
+			}else if(level == 'm' && count <= (size-8)){
+				board[i][j] = 'T';
+				count++;
+			}else if(level == 'h' && count <= (size-10)){
+				board[i][j] = 'T';
+				count++;
+			}
+		}
+	}
 }
 void Board::boardConfig() {
 /* (8 pts) code for the boardConfig method goes here
@@ -184,6 +205,11 @@ square.
 //		}
 //	}
 
+
+	board[mydog.x][mydog.y] = 'D';
+	board[endx][size-1] = 'E';
+
+
 	//making walls
 	int count = 0;
 	//if level == e set to 9 else if level == m set to m else set to 16
@@ -221,8 +247,7 @@ square.
 	}
 
 //	cout << "\n TOTAL COUNT = " << count << endl;
-//	board[startx][0] = 'D';
-//	board[endx][size-1] = 'E';
+
 
 }
 void Board::printBoard() {
@@ -257,6 +282,7 @@ void Board::printBoard() {
 					cout << " ";
 				}
 			}else if(board[i][j] == 'D'){
+				//cout << "D";
 				cout << board[i][j];
 			}else{
 				cout << board[i][j];
@@ -312,7 +338,134 @@ bool Board::moveDog(char c) {
 	*
 	*/
 
+	//changing coordinates
+//	if(c=='u'){
+//		if(mydog.y!=size){
+//			mydog.y++;
+//		}
+//	}
+//	else if(c=='d'){
+//		if(mydog.y!=0){
+//			mydog.y--;
+//		}
+//	}
+//	else if(c=='l'){
+//		if(mydog.x!=0){
+//			mydog.x--;
+//		}
+//	}
+//	else if(c=='r'){
+//		if(mydog.x!=size){
+//			mydog.x++;
+//		}
+//	}
+//	//determining if dog landed on square with food, trap, walls, or other
+//	if(board[mydog.x][mydog.y]=='T'){
+//		int damage=(rand()%16)+2;
+//		mydog.changeStrength(-damage);
+//		cout << "you hit a trap" << endl;
+//	}
+//	if(board[mydog.x][mydog.y]=='F'){
+//		int health=(rand()%16)+2;
+//		mydog.changeStrength(health);
+//		cout << "you ate food" << endl;
+//	}
+//	if(board[mydog.x][mydog.y]=='-'||board[mydog.x][mydog.y]=='|'){
+//		//Dog.strength??
+//		//not sure what to do if dog doesn't have strength to knock over
+//		if(mydog.strength>6){
+//			cout << "Do you want to knock down the wall? (y/n)" << endl;
+//			char ans;
+//			cin >> ans;
+//			if(ans=='y'){
+//				mydog.changeStrength(-6);
+//				board[mydog.x][mydog.y]='+';
+//			}
+//			else if(ans=='n'){
+//				mydog.changeStrength(-1);
+//				//move them back to the last square
+//			}
+//		}
+//	}
+//	//regular
+//	if(board[mydog.x][mydog.y]=='+'){
+//		mydog.changeStrength(-2);
+//	}
+//
+//	return 1;
 
+	if(mydog.strength == 0){
+		mydog.die();
+		return 0;
+	}
+
+	if(c=='u'){
+		if(mydog.x!=size){
+			mydog.x--;
+			board[mydog.x+1][mydog.y]='+';
+		}
+	}
+	else if(c=='d'){
+		if(mydog.x!=size){
+			mydog.x++;
+			board[mydog.x-1][mydog.y]='+';
+		}
+	}
+	else if(c=='l'){
+		if(mydog.y!=size){
+			mydog.y--;
+			board[mydog.x][mydog.y+1]='+';
+		}
+	}
+	else if(c=='r'){
+		if(mydog.y!=size){
+			mydog.y++;
+			board[mydog.x][mydog.y-1]='+';
+		}
+	}
+	//determining if dog landed on square with food, trap, walls, or other
+	if(board[mydog.x][mydog.y]=='T'){
+		cout << "*** YOU HIT A TRAP ***" << endl;
+		int damage=(rand()%16)+2;
+		mydog.changeStrength(-damage);
+		board[mydog.x][mydog.y]='+';
+	}
+	if(board[mydog.x][mydog.y]=='F'){
+		cout << "*** YOU ATE FOOD ***" << endl;
+		int health=(rand()%16)+2;
+		mydog.changeStrength(health);
+		board[mydog.x][mydog.y]='+';
+	}
+	if(board[mydog.x][mydog.y]=='E'){
+			mydog.won();
+			return 0;
+	}
+	if(board[mydog.x][mydog.y]=='-'||board[mydog.x][mydog.y]=='|'){
+		//Dog.strength??
+		//not sure what to do if dog doesn't have strength to knock over
+		if(mydog.strength>6){
+			cout << "Do you want to knock down the wall? (y/n)" << endl;
+			char ans;
+			cin >> ans;
+			if(ans=='y'){
+				mydog.changeStrength(-6);
+				board[mydog.x][mydog.y]='+';
+			}
+			else if(ans=='n'){
+				mydog.changeStrength(-1);
+				//move them back to the last square
+			}
+		}
+	}
+	//regular
+	if(board[mydog.x][mydog.y]=='+'){
+		mydog.changeStrength(-2);
+	}
+
+	//moving dog
+	//board[mydog.x][mydog.y]='+';
+	board[mydog.x][mydog.y]='D';
+	return 1;
 }
 
 
