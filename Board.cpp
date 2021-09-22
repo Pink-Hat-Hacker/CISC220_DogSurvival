@@ -43,7 +43,7 @@ void Board::InitAll() {
 		char c;
 		cin >> c;
 		level = c;
-		startx = rand() % size;
+		startx = rand() % (size - 1) + 1;
 		starty = 0;
 		endx = rand() % size;
 		endy = size-1;
@@ -60,7 +60,7 @@ void Board::InitAll() {
 
 		if (s == "yes" || s == "Yes" || s == "Y" || s == "y") {
 			keepPlaying = true;
-			//mydog.reset();
+			mydog.reset();
 		}
 		else {
 			cout <<"Thanks for playing!" << endl;
@@ -205,11 +205,24 @@ square.
 //		}
 //	}
 
+	//TOP/BOTTOM
+	for(int i = 0; i < size; i++){
+		board[0][i] = '-';
+	}
+	for(int i = 0; i < size; i++){
+		board[19][i] = '-';
+	}
+	//SIDES
+	for(int i = 0; i < size; i++){
+		board[i][0] = '|';
+	}
+	for(int i = 0; i < size; i++){
+		board[i][19] = '|';
+	}
+
 
 	board[mydog.x][mydog.y] = 'D';
 	board[endx][size-1] = 'E';
-
-
 	//making walls
 	int count = 0;
 	//if level == e set to 9 else if level == m set to m else set to 16
@@ -217,54 +230,74 @@ square.
 	while(count <= res){
 		int ori = rand() % 2;
 		int i = rand()%size, j = rand()%size;
+		int num = rand()%7 + 3;
 		if(ori == 1){
+			if(i % 2 == 1){
+				i++;
+			}
 			if(board[i][j] == '+'){
+				//cout << "THIS IS i:" << i << endl;
 				if(level == 'e' && count <= 9){
-					board[i][j] = '|';
+					for(int z = 0; z < num; z++){
+						if(board[i+z][j] == '+'){
+							board[i+z][j] = '|';
+						}
+					}
 					count++;
 				}else if(level == 'm' && count <= 13){
-					board[i][j] = '|';
+					for(int z = 0; z < num; z++){
+						if(board[i+z][j] == '+'){
+							board[i+z][j] = '|';
+						}
+					}
 					count++;
 				}else if(level == 'h' && count <= 16){
-					board[i][j] = '|';
+					for(int z = 0; z < num; z++){
+						if(board[i+z][j] == '+'){
+							board[i+z][j] = '|';
+						}
+					}
 					count++;
 				}
 			}
 		}else{
+			if(j % 2 == 1){
+				j++;
+			}
 			if(board[i][j] == '+'){
+				//cout << "THIS IS j:" << j << endl;
 				if(level == 'e' && count <= 9){
-					board[i][j] = '-';
+					for(int z = 0; z < num; z++){
+						if(board[i][j+z] == '+'){
+							board[i][j+z] = '-';
+						}
+					}
 					count++;
 				}else if(level == 'm' && count <= 13){
-					board[i][j] = '-';
+					for(int z = 0; z < num; z++){
+						if(board[i][j+z] == '+'){
+							board[i][j+z] = '-';
+						}
+					}
 					count++;
 				}else if(level == 'h' && count <= 16){
-					board[i][j] = '-';
+					for(int z = 0; z < num; z++){
+						if(board[i][j+z] == '+'){
+							board[i][j+z] = '-';
+						}
+					}
 					count++;
 				}
 			}
 		}
 	}
-
-//	cout << "\n TOTAL COUNT = " << count << endl;
-
-
 }
 void Board::printBoard() {
 /* (8 pts) code for the printBoard method goes here
 */
-	//calling the printDog method first to gather all of that info
-	//mydog.printDog();
-
-	//TOP
-	for(int i = 0; i < size; i++){
-		cout << "-";
-	}
-	cout << endl;
-
 	//BODY
 	for(int i = 0; i < size; i++){
-		cout << "| ";
+		//cout << "| ";
 		for(int j = 0; j < size; j++){
 			//dog info check
 			if(board[i][j] == '+'){
@@ -287,16 +320,12 @@ void Board::printBoard() {
 			}else{
 				cout << board[i][j];
 			}
+			cout << " ";
 		}
-		cout << " |" << endl;
-	}
-
-	for(int i = 0; i < size; i++){
-			cout << "-";
+		//cout << " |" << endl;
+		cout << endl;
 	}
 	cout << endl;
-	//dog print info
-
 }
 
 bool Board::moveDog(char c) {
@@ -394,25 +423,25 @@ bool Board::moveDog(char c) {
 //
 //	return 1;
 
-	if(mydog.strength == 0){
+	if(mydog.strength <= 0){
 		mydog.die();
 		return 0;
 	}
 
 	if(c=='u'){
-		if(mydog.x!=size){
+		if(mydog.x!=1){
 			mydog.x--;
 			board[mydog.x+1][mydog.y]='+';
 		}
 	}
 	else if(c=='d'){
-		if(mydog.x!=size){
+		if(mydog.x!=size-1){
 			mydog.x++;
 			board[mydog.x-1][mydog.y]='+';
 		}
 	}
 	else if(c=='l'){
-		if(mydog.y!=size){
+		if(mydog.y!=1){
 			mydog.y--;
 			board[mydog.x][mydog.y+1]='+';
 		}
@@ -453,6 +482,8 @@ bool Board::moveDog(char c) {
 			}
 			else if(ans=='n'){
 				mydog.changeStrength(-1);
+				board[mydog.x][mydog.y]='D';
+				return 1;
 				//move them back to the last square
 			}
 		}
@@ -463,7 +494,6 @@ bool Board::moveDog(char c) {
 	}
 
 	//moving dog
-	//board[mydog.x][mydog.y]='+';
 	board[mydog.x][mydog.y]='D';
 	return 1;
 }
