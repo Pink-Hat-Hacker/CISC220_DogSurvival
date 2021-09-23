@@ -97,6 +97,10 @@ bool Dog::changeStrength(int amt){
 //
 void Dog::die(){
 	cout << "Oh no! "<< name << " died in the evil forest!"<< endl;
+
+	cout << " ∩_---_∩ " << "\n";
+	cout << "{ X ꈊ X }" << "\n";
+	cout << " -------" << endl;
 }
 //
 ///*
@@ -104,7 +108,7 @@ void Dog::die(){
 // */
 void Dog::printDog(){
 	//cout << "Your dog's name is " << name << "." << endl;
-	cout << name << " has " << strength << " strength left." << endl;
+	cout << name << " has " << strength << " strength left.   \\(ง • ̀ꈊ • ́) ง " << endl;
 	//testing
 	cout << "x: " << x << "  y: " << y << "\n" << endl;
 }
@@ -115,6 +119,7 @@ void Dog::printDog(){
 //
 void Dog::won(){
 	cout << "Congratulations!!! You survived the evil Forest!" << endl;
+
 }
 //
 ///*

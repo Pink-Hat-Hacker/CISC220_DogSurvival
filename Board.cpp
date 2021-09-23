@@ -43,9 +43,9 @@ void Board::InitAll() {
 		char c;
 		cin >> c;
 		level = c;
-		startx = rand() % (size - 1) + 1;
+		startx = rand() % (size - 2) + 1;
 		starty = 0;
-		endx = rand() % size;
+		endx = rand() % (size - 2) + 1;
 		endy = size-1;
 		mydog.x = startx;
 		mydog.y = starty;
@@ -423,6 +423,9 @@ bool Board::moveDog(char c) {
 //
 //	return 1;
 
+	//for no conditional (break walls)
+	//int flag = 0;
+
 	if(mydog.strength <= 0){
 		mydog.die();
 		return 0;
@@ -447,7 +450,7 @@ bool Board::moveDog(char c) {
 		}
 	}
 	else if(c=='r'){
-		if(mydog.y!=size){
+		if((mydog.y!=size) && (board[mydog.x][mydog.y] != '|')){
 			mydog.y++;
 			board[mydog.x][mydog.y-1]='+';
 		}
@@ -481,10 +484,22 @@ bool Board::moveDog(char c) {
 				board[mydog.x][mydog.y]='+';
 			}
 			else if(ans=='n'){
+				//flag = 1;
 				mydog.changeStrength(-1);
+				//move them back to the last square (trailing code)
+//				if(c=='u'){
+//					board[mydog.x+1][mydog.y]='D';
+//				}else if(c=='d'){
+//					board[mydog.x-1][mydog.y]='D';
+//				}else if(c=='l'){
+//					board[mydog.x][mydog.y+1]='D';
+//				}else if(c=='r'){
+//					board[mydog.x][mydog.y-1]='D';
+//				}
+
 				board[mydog.x][mydog.y]='D';
 				return 1;
-				//move them back to the last square
+
 			}
 		}
 	}
@@ -494,7 +509,9 @@ bool Board::moveDog(char c) {
 	}
 
 	//moving dog
-	board[mydog.x][mydog.y]='D';
+	//if(flag == 0){
+		board[mydog.x][mydog.y]='D';
+	//}
 	return 1;
 }
 
