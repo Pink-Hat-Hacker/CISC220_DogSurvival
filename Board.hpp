@@ -10,6 +10,11 @@
 
 #include "Dog.hpp"
 #include <iostream>
+
+//for color
+//#include <windows.h>
+#include <stdlib.h>
+
 #include <string.h>
 using namespace std;
 class Board {
@@ -23,6 +28,15 @@ int endy; // will be size -1
 char level; //'e' for easy, 'm' for medium, 'h' for hard (user can input in the initAll() method)
 Dog mydog; //the dog object that's moving through
 bool debug;
+
+//zombie addition
+int zomx;
+int zomy;
+int rep=0;
+int updown=0;
+int lastx=1;
+int lasty=1;
+
 //this is a boolean value that I used for debugging - so if it was true, and
 //I was in debug mode, I'd include a lot more print statements in each method
 //so I could see where I was and what was happening. Then I could just switch
@@ -154,6 +168,11 @@ public:
 	* only printed on the board when the game is in debug mode. The amount of strength each trap
 	* saps from the dog is determined in the moveDog method when the dog moves on a Trap.
 	*/
+
+	//zombie addition
+	void addZombies();
+
+
 	void playGame();
 	/* TODO: PLAYGAME
 	 * (I'm giving you this one)

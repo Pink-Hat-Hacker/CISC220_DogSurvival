@@ -10,6 +10,11 @@
 //trying out
 #include "Dog.hpp"
 #include <iostream>
+
+//for color
+//#include <windows.h>
+#include <stdlib.h>
+
 using namespace std;
 
 Board::Board(char diff, bool d){
@@ -47,6 +52,10 @@ void Board::InitAll() {
 		starty = 0;
 		endx = rand() % (size - 2) + 1;
 		endy = size-1;
+		//zombie addition
+		zomx= rand()%12 + 2;
+		zomy = rand()%11 + 8;
+
 		mydog.x = startx;
 		mydog.y = starty;
 		boardConfig();
@@ -77,6 +86,7 @@ void Board::playGame() {
 		char c;
 		cin >> c;
 		play = moveDog(c);
+		addZombies();
 		printBoard();
 	}
 }
@@ -152,6 +162,35 @@ void Board::addTraps() {
 		}
 	}
 }
+
+//zombie addition
+void Board::addZombies(){
+	//cout << "I'm a zombie" << endl;
+	level = tolower(level);
+
+
+	if(level=='m'||level=='h'){
+		board[lastx][lasty]='+';
+		board[zomx+rep][zomy]='Z';
+		lastx=zomx+rep;
+		lasty=zomy;
+		//rep++;
+
+		if(rep==0 && updown==1){
+			updown=0;
+		}
+		else if(rep==4){
+			updown=1;
+		}
+		if(updown==0){
+			rep++;
+		}
+		if(updown==1){
+			rep--;
+		}
+	}
+}
+
 void Board::boardConfig() {
 /* (8 pts) code for the boardConfig method goes here
 */
@@ -308,6 +347,10 @@ void Board::printBoard() {
 				}else{
 					cout << " ";
 				}
+			}else if (board[i][j] == 'Z'){
+				system("Color 0A");
+				cout << board[i][j];
+				system("Color 07");
 			}else if(board[i][j] == 'F'){
 				if(debug){
 					cout << "F";
@@ -425,6 +468,7 @@ bool Board::moveDog(char c) {
 
 	//for no conditional (break walls)
 	//int flag = 0;
+	int dir = 0;
 
 	if(mydog.strength <= 0){
 		mydog.die();
@@ -435,24 +479,28 @@ bool Board::moveDog(char c) {
 		if(mydog.x!=1){
 			mydog.x--;
 			board[mydog.x+1][mydog.y]='+';
+			dir = 1;
 		}
 	}
 	else if(c=='d'){
 		if(mydog.x!=size-1){
 			mydog.x++;
 			board[mydog.x-1][mydog.y]='+';
+			dir = 3;
 		}
 	}
 	else if(c=='l'){
 		if(mydog.y!=1){
 			mydog.y--;
 			board[mydog.x][mydog.y+1]='+';
+			dir = 4;
 		}
 	}
 	else if(c=='r'){
 		if((mydog.y!=size) && (board[mydog.x][mydog.y] != '|')){
 			mydog.y++;
 			board[mydog.x][mydog.y-1]='+';
+			dir = 2;
 		}
 	}
 	//determining if dog landed on square with food, trap, walls, or other
@@ -472,6 +520,11 @@ bool Board::moveDog(char c) {
 			mydog.won();
 			return 0;
 	}
+	if((board[mydog.x][mydog.y]=='Z') || (board[zomx+rep][zomy] == 'D')){
+			cout << "Ahhh! You got bit by a Zombie" << endl;
+			mydog.die();
+			return 0;
+	}
 	if(board[mydog.x][mydog.y]=='-'||board[mydog.x][mydog.y]=='|'){
 		//Dog.strength??
 		//not sure what to do if dog doesn't have strength to knock over
@@ -487,15 +540,23 @@ bool Board::moveDog(char c) {
 				//flag = 1;
 				mydog.changeStrength(-1);
 				//move them back to the last square (trailing code)
-//				if(c=='u'){
-//					board[mydog.x+1][mydog.y]='D';
-//				}else if(c=='d'){
-//					board[mydog.x-1][mydog.y]='D';
-//				}else if(c=='l'){
-//					board[mydog.x][mydog.y+1]='D';
-//				}else if(c=='r'){
-//					board[mydog.x][mydog.y-1]='D';
-//				}
+				if(dir==1){
+					mydog.x=mydog.x+1;
+					//board[mydog.x][mydog.y]='+';
+					//board[mydog.x+1][mydog.y]='D';
+				}else if(dir==3){
+					mydog.x=mydog.x-1;
+					//board[mydog.x][mydog.y]='+';
+					//board[mydog.x-1][mydog.y]='D';
+				}else if(dir==4){
+					mydog.y = mydog.y+1;
+					//board[mydog.x][mydog.y]='+';
+					//board[mydog.x][mydog.y+1]='D';
+				}else if(dir == 2){
+					mydog.y = mydog.y-1;
+					//board[mydog.x][mydog.y]='+';
+					//board[mydog.x][mydog.y-1]='D';
+				}
 
 				board[mydog.x][mydog.y]='D';
 				return 1;
@@ -512,6 +573,10 @@ bool Board::moveDog(char c) {
 	//if(flag == 0){
 		board[mydog.x][mydog.y]='D';
 	//}
+	if(mydog.strength <= 0){
+		mydog.die();
+		return 0;
+	}
 	return 1;
 }
 
