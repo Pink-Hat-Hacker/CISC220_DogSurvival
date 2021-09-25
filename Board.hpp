@@ -12,8 +12,9 @@
 #include <iostream>
 
 //for color
-//#include <windows.h>
-#include <stdlib.h>
+#define GREEN   "\033[32m"
+#define RESET   "\033[0m"
+#include <stdio.h>
 
 #include <string.h>
 using namespace std;

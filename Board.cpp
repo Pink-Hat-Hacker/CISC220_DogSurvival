@@ -12,8 +12,9 @@
 #include <iostream>
 
 //for color
-//#include <windows.h>
-#include <stdlib.h>
+#include <stdio.h>
+#define RESET "\033[0m"
+#define GREEN "\033[32m"
 
 using namespace std;
 
@@ -92,14 +93,6 @@ void Board::playGame() {
 }
 
 void Board::addFood() {
-/* (5 pts) code for the addFood method goes here
-*/
-	/* this method randomly adds food around the board. For easy, I added the field size
-	* number of foods randomly around the board. For medium, I added size-2 foods, and for
-	* hard I added size-4 foods. The amount of strength the dog gets when they eat (aka
-	5
-	* move onto) the food is determined in the moveDog method.
-	*/
 
 	level = tolower(level);
 
@@ -195,39 +188,6 @@ void Board::boardConfig() {
 /* (8 pts) code for the boardConfig method goes here
 */
 	level = tolower(level);
-/* this method and the moveDog method are probably the longest methods.
-* This method first puts dummy values in every square (I used '+' - I just didn't want
-* every square to have gibberish, so I chose a character I wasn't using for any other
-* purpose and initialized every square to have that value).
-* I then added my random horizontal and vertical walls.
-*
-* Here's how I did it the walls:
-*
-* I only placed walls in the odd numbered rows and columns (in other words, row one might
-* have a row, but then row 2 would not, whereas row three could and row 4 could not.
-* Same with columns (although you can have flexibility.
-*
-* I picked an odd row or column that did not already have a wall in it at all.
-*
-4
-* I generated a total of 10 walls.
-* For each wall, I picked randomly for vertical or horizontal (just rand() % 2 to get either
-* 0 for vertical, 1 for horizontal.
-*
-* I set the easy version to have at most 9 squares in a row or column as a wall, the
-* medium to have at most 13 squares as walls in a row or column, and the hard version to
-* have at most 16 squares per row or column.(but you can play with this because sometimes
-* the hard version was seriously hard!!!
-*
-* Let's say I randomly decided to place a wall in row 3. I then randomly chose 9 squares in
-* row 3 to be a wall (if it was the easy version, 13 if it was the medium, and 16 if it was
-* the hard)
-*
-* So that's the walls. Then I added the 'D' to the beginning square nad an 'E' to the end
-square.
-*
-*
-*/
 
 	//before the loop
 	//filling
@@ -348,9 +308,8 @@ void Board::printBoard() {
 					cout << " ";
 				}
 			}else if (board[i][j] == 'Z'){
-				system("Color 0A");
+				system(GREEN);
 				cout << board[i][j];
-				system("Color 07");
 			}else if(board[i][j] == 'F'){
 				if(debug){
 					cout << "F";
@@ -374,97 +333,6 @@ void Board::printBoard() {
 bool Board::moveDog(char c) {
 /* (12 pts) code for the moveDog method goes here
 */
-/* TODO: MOVEDOG
-	 * This is a somewhat long method.
-	* First, it determines the new coordinats of the dog, based on teh direction in which the
-	* dog wants to move (based on what c holds - u is up, d is down, l is left, r is right).
-	*
-	* If the dog is at teh edge of the board, teh dog should not move
-	*
-	* If the dog moves over food, a random number between 2 and 17 is generated, and the
-	* dog's changeStrength method is used to increase the dog's strength by the random amount.
-	*
-	* If the dog moves over the end of the board, the dog's won method is called and false is
-	* returned from this method.
-	*
-	* If the dog moves over a Trap, a random number between 2 and 17 is generated and the dog's
-	* changeStrength method is called with that negative number. (Note that the changeStrength
-	* method returns a boolean indicating whether the dog's strength has gone to 0 or less, and
-	* thus the dog has died and the game is over. That boolean value is returned from this method).
-	*
-	* If the dog moves over a wall, the method checks to see if the dog has enough strength to
-	* knock down the wall (I made it cost 6 strength points to knock down a wall). If the dog
-	* has enough strength, the user is asked, "Do you want to knock down that wall?" If the user
-	* responds "yes", then the wall is knocked down, the dog moves into that square, adn the dog's
-	* strength decreases by 6. If the answer is "no", the dog loses 1 strength point, just because.
-	*
-	* If the dog moves into a blank square, the dog loses 2 strength points using the changeStrength
-	* method (which, again, will return false if the dog has lost all their strength and died.
-	*
-	* NOTE: I am not concerned with the precise rules here. If you want to change the range of
-	* random numbers for food, if you are worried about whether you still lose 2 strength points for
-	* moving even though you gained points for moving over food - I'm leaving all that to your
-	preference.
-	* I am concerned that you are using classes, objects, and object methods and accessing object
-	* fields correctly!
-	*
-	*/
-
-	//changing coordinates
-//	if(c=='u'){
-//		if(mydog.y!=size){
-//			mydog.y++;
-//		}
-//	}
-//	else if(c=='d'){
-//		if(mydog.y!=0){
-//			mydog.y--;
-//		}
-//	}
-//	else if(c=='l'){
-//		if(mydog.x!=0){
-//			mydog.x--;
-//		}
-//	}
-//	else if(c=='r'){
-//		if(mydog.x!=size){
-//			mydog.x++;
-//		}
-//	}
-//	//determining if dog landed on square with food, trap, walls, or other
-//	if(board[mydog.x][mydog.y]=='T'){
-//		int damage=(rand()%16)+2;
-//		mydog.changeStrength(-damage);
-//		cout << "you hit a trap" << endl;
-//	}
-//	if(board[mydog.x][mydog.y]=='F'){
-//		int health=(rand()%16)+2;
-//		mydog.changeStrength(health);
-//		cout << "you ate food" << endl;
-//	}
-//	if(board[mydog.x][mydog.y]=='-'||board[mydog.x][mydog.y]=='|'){
-//		//Dog.strength??
-//		//not sure what to do if dog doesn't have strength to knock over
-//		if(mydog.strength>6){
-//			cout << "Do you want to knock down the wall? (y/n)" << endl;
-//			char ans;
-//			cin >> ans;
-//			if(ans=='y'){
-//				mydog.changeStrength(-6);
-//				board[mydog.x][mydog.y]='+';
-//			}
-//			else if(ans=='n'){
-//				mydog.changeStrength(-1);
-//				//move them back to the last square
-//			}
-//		}
-//	}
-//	//regular
-//	if(board[mydog.x][mydog.y]=='+'){
-//		mydog.changeStrength(-2);
-//	}
-//
-//	return 1;
 
 	//for no conditional (break walls)
 	//int flag = 0;
@@ -483,7 +351,7 @@ bool Board::moveDog(char c) {
 		}
 	}
 	else if(c=='d'){
-		if(mydog.x!=size-1){
+		if(mydog.x!=size-2){
 			mydog.x++;
 			board[mydog.x-1][mydog.y]='+';
 			dir = 3;
@@ -521,7 +389,7 @@ bool Board::moveDog(char c) {
 			return 0;
 	}
 	if((board[mydog.x][mydog.y]=='Z') || (board[zomx+rep][zomy] == 'D')){
-			cout << "Ahhh! You got bit by a Zombie" << endl;
+			cout << "Ahhh! You got bit by a Zombie!!  [¬º-°]¬" << endl;
 			mydog.die();
 			return 0;
 	}
